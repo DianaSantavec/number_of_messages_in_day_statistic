@@ -72,9 +72,9 @@ for messages in data['messages']:
             number_of_messages[i]=0
 
         #zapisi kome pripada poslednja poruka tog dana (prva u json-u)
-        #for i in range(len(names)):
-         #   if names[i] == messages['sender_name']:
-          #      number_of_messages[i]+=1
+        for i in range(len(names)):
+            if names[i] == messages['sender_name']:
+                number_of_messages[i]+=1
 
 #draw last day
 #for i in range(len(names)):
