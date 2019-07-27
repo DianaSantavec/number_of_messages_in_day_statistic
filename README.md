@@ -1,0 +1,1 @@
+# number_of_messages_in_day_statistic
