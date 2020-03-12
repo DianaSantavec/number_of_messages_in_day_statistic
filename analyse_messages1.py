@@ -21,7 +21,8 @@ date_array = []
 for participants in data['participants']:
     names.append (participants['name'])
     number_of_messages.append (int (0))
-    print (participants['name'])
+    #print (participants['name'])
+
 
 #set last day
 timestamp= int (data['messages'][0]['timestamp_ms'])
@@ -62,7 +63,9 @@ for messages in data['messages']:
             #value_array_persons[i] = np.append(value_array_persons[i],number_of_messages[i])
         value_array_person_one.append(number_of_messages[0])
         value_array_person_two.append(number_of_messages[1])
-        date_array.append(full_prew_date)
+
+        date_array.append(full_prew_date.strftime("%Y-%m-%d"))
+
 
         full_prew_date = full_date
         prew_message_day = message_day
@@ -83,9 +86,23 @@ for messages in data['messages']:
 #for i in range(len(names)):
     #value_array_persons[i].append (number_of_messages [i])
     #value_array_persons[i] = np.append(value_array_persons[i],number_of_messages[i])
-date_array.append(full_prew_date)
+
+date_array.append(full_prew_date.strftime("%Y-%m-%d"))
+
 value_array_person_one.append(number_of_messages[0])
 value_array_person_two.append(number_of_messages[1])
+
+
+
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax = plt.subplot(111)
+ax.bar(date_array, value_array_person_one, color = 'b', width = 0.25)
+ax.bar(date_array, value_array_person_two, color = 'g', width = 0.25)
+#ax.xaxis_date()
+plt.show()
+
+
 
 #print (value_array_persons[1])
 #for people_messages in number_of_messages:
