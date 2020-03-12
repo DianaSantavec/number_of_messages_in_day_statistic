@@ -35,9 +35,6 @@ timestamp = int (data['messages'][counter-1]['timestamp_ms'])
 full_first_day = date.fromtimestamp(timestamp/1000.0)
 first_message_dat = full_first_day.day
 
-#draw x and y axis
-#plt.axis([full_first_day, full_prew_date, 0, 10]) 
-
 
 #get number of messages for each person on same day
 for messages in data['messages']:
@@ -50,17 +47,7 @@ for messages in data['messages']:
         for i in range(len(names)):
             if names[i] == messages['sender_name']:
                 number_of_messages[i]+=1
-    else:
-        #nacrtaj tacke na grafiku (osim ako im je vrednost 0) i pocni novi brojac
-        #for i in range(len(names)):
-          #  if number_of_messages[i] != 0:
-                #plt.scatter(full_prew_date, number_of_messages[i],s=30,c=color[i])
-           #     plt.plot(full_date,number_of_messages[i])
-           #     value_array_person_one
-                
-        #for i in range(len(names)):
-            #value_array_persons[i].append (number_of_messages [i])
-            #value_array_persons[i] = np.append(value_array_persons[i],number_of_messages[i])
+    else:      
         value_array_person_one.append(number_of_messages[0])
         value_array_person_two.append(number_of_messages[1])
 
@@ -79,19 +66,13 @@ for messages in data['messages']:
             if names[i] == messages['sender_name']:
                 number_of_messages[i]+=1
 
-#draw last day
-#for i in range(len(names)):
- #   if number_of_messages[i] != 0:
-  #      plt.scatter(full_prew_date, number_of_messages[i],s=30,c=color[i])
-#for i in range(len(names)):
-    #value_array_persons[i].append (number_of_messages [i])
-    #value_array_persons[i] = np.append(value_array_persons[i],number_of_messages[i])
 
 date_array.append(full_prew_date.strftime("%Y-%m-%d"))
 
 value_array_person_one.append(number_of_messages[0])
 value_array_person_two.append(number_of_messages[1])
 
+#X pravi brojeve za svaki datum da bi se moglo odrediti rastojanje izmedju stubica
 X = np.arange(len(date_array))
 fig,ax = plt.subplots()
 rects1 = ax.bar(X-0.25/2, value_array_person_one,0.25,label = names[0])
