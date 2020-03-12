@@ -92,15 +92,25 @@ date_array.append(full_prew_date.strftime("%Y-%m-%d"))
 value_array_person_one.append(number_of_messages[0])
 value_array_person_two.append(number_of_messages[1])
 
+X = np.arange(len(date_array))
+fig,ax = plt.subplots()
+rects1 = ax.bar(X-0.25/2, value_array_person_one,0.25,label = names[0])
+rects1 = ax.bar(X+0.25/2, value_array_person_two,0.25,label = names[1])
 
-
-fig = plt.figure()
-ax = fig.add_axes([0,0,1,1])
-ax = plt.subplot(111)
-ax.bar(date_array, value_array_person_one, color = 'b', width = 0.25)
-ax.bar(date_array, value_array_person_two, color = 'g', width = 0.25)
-#ax.xaxis_date()
+ax.set_ylabel('Number of messages')
+ax.set_title('message analysis')
+ax.set_xticks(X)
+ax.set_xticklabels(date_array)
+ax.legend()
 plt.show()
+
+#fig = plt.figure()
+#ax = fig.add_axes([0,0,1,1])
+#ax = plt.subplot(111)
+#ax.bar(date_array, value_array_person_one, color = 'b', width = 0.25)
+#ax.bar(date_array, value_array_person_two, color = 'g', width = 0.25)
+##ax.xaxis_date()
+#plt.show()
 
 
 
