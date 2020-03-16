@@ -1,13 +1,20 @@
+#!/usr/bin/python
+
+import sys
 import json
 import datetime
 from datetime import date
 import matplotlib.pyplot as plt
 import numpy as np
 
-color = ["red", "green", "white"]
+if len(sys.argv) != 2:
+    print("niste dobro prosledili .json file")
+    sys.exit()
+
+color = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
 
 #open json file
-json_open = open ('test.json')
+json_open = open (sys.argv[1])
 data = json.load(json_open)
 json_open.close()
 names = []
@@ -23,6 +30,9 @@ for participants in data['participants']:
     number_of_messages.append (int (0))
     #print (participants['name'])
 
+persons = []
+for i in range (0,len(names)):
+    persons.append([])
 
 #set last day
 timestamp= int (data['messages'][0]['timestamp_ms'])
@@ -35,6 +45,8 @@ timestamp = int (data['messages'][counter-1]['timestamp_ms'])
 full_first_day = date.fromtimestamp(timestamp/1000.0)
 first_message_dat = full_first_day.day
 
+#number of days / second index for persons matrix
+counter = 0
 
 #get number of messages for each person on same day
 for messages in data['messages']:
@@ -42,17 +54,20 @@ for messages in data['messages']:
     timestamp= messages['timestamp_ms']
     full_date = date.fromtimestamp(timestamp/1000.0)
     message_day = full_date.day
+    
 
     if prew_message_day == message_day:
         for i in range(len(names)):
             if names[i] == messages['sender_name']:
                 number_of_messages[i]+=1
-    else:      
-        value_array_person_one.append(number_of_messages[0])
-        value_array_person_two.append(number_of_messages[1])
+    
+    else:
+        for j in range(len(names)):
+            persons[j].append (number_of_messages[j])
+
+        counter += 1
 
         date_array.append(full_prew_date.strftime("%Y-%m-%d"))
-
 
         full_prew_date = full_date
         prew_message_day = message_day
@@ -69,62 +84,41 @@ for messages in data['messages']:
 
 date_array.append(full_prew_date.strftime("%Y-%m-%d"))
 
-value_array_person_one.append(number_of_messages[0])
-value_array_person_two.append(number_of_messages[1])
+for j in range(len(names)):
+    persons[j].append (number_of_messages[j])
+counter += 1
 
-#X pravi brojeve za svaki datum da bi se moglo odrediti rastojanje izmedju stubica
-X = np.arange(len(date_array))
-fig,ax = plt.subplots()
-rects1 = ax.bar(X-0.25/2, value_array_person_one,0.25,label = names[0])
-rects1 = ax.bar(X+0.25/2, value_array_person_two,0.25,label = names[1])
+fig, ax = plt.subplots()
 
-ax.set_ylabel('Number of messages')
-ax.set_title('message analysis')
-ax.set_xticks(X)
-ax.set_xticklabels(date_array)
-ax.legend()
+index = np.arange(len(date_array))
+
+bar_width = 0.35
+opacity = 0.4
+
+error_config = {'ecolor': '0.3'}
+
+rects = []
+for k in range(0,len(names)):
+    rects.append (plt.bar(index + k * bar_width, persons[k], bar_width, alpha=opacity, color=color[k], error_kw=error_config, label=names[k]))
+
+plt.xlabel('Dates')
+plt.ylabel('Number of messages')
+plt.title('Number of messages per day for each person in conversation')
+plt.xticks(index + bar_width / 2, date_array)
+plt.legend()
+
+plt.tight_layout()
 plt.show()
 
-#fig = plt.figure()
-#ax = fig.add_axes([0,0,1,1])
-#ax = plt.subplot(111)
-#ax.bar(date_array, value_array_person_one, color = 'b', width = 0.25)
-#ax.bar(date_array, value_array_person_two, color = 'g', width = 0.25)
-##ax.xaxis_date()
-#plt.show()
-
-
-
-#print (value_array_persons[1])
-#for people_messages in number_of_messages:
-  #  print (people_messages)
-#for i in range(len(names)):
-    #plt.legend(color[i],names[i])
-#plt.legend( loc=2)
-
-#plt.plot(date_array,value_array_person_one, linewidth = 3, color = 'red')
-#plt.plot(date_array,value_array_person_two, linewidth = 3, color = 'blue')
-#position_bar_x = []
-#print (len(value_array_persons[0]))
-#position_bar_x[0]=np.arange(len(value_array_persons[0]))
-#for i in range(len(names)):
- #   position_bar_x [i] = [x + 0.25 for x in position_bar_x[i-1]]
-
-#bar_width = 0.25
-#for i in range(len(names)):
- #   plt.bar(position_bar_x[i], value_array_persons[i], color[i], width=bar_width,edgecolor = 'white', label=date_array[i])
-
-#plt.legend
-#plt.show()
-
-with open('excel1.txt', 'w') as save_file:
-    for listitem in value_array_person_one:
-        save_file.write('%s\n' % listitem)
-#    save_file.write('\n')
-with open('excel2.txt', 'w') as save_file:
-    for listitem in value_array_person_two:
-        save_file.write('%s\n' % listitem)
-#    save_file.write('\n')
-with open('excel_date.txt', 'w') as save_file:
-    for listitem in date_array:
-        save_file.write('%s\n' % listitem)
+#save raw values
+#with open('excel1.txt', 'w') as save_file:
+#    for listitem in value_array_person_one:
+#        save_file.write('%s\n' % listitem)
+##    save_file.write('\n')
+#with open('excel2.txt', 'w') as save_file:
+#    for listitem in value_array_person_two:
+#        save_file.write('%s\n' % listitem)
+##    save_file.write('\n')
+#with open('excel_date.txt', 'w') as save_file:
+#    for listitem in date_array:
+#        save_file.write('%s\n' % listitem)
